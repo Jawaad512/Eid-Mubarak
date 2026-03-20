@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eid Mubarak | Personalized Wishes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&family=Montserrat:wght@300;400&display=swap"
+        rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --emerald: #1B4332;
+            --gold: #D4AF37;
+            --cream: #F9F5E8;
+            --text-dark: #2D2D2D;
+        }
+
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--emerald);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Login Screen */
+        #login-screen {
+            text-align: center;
+            color: var(--gold);
+            z-index: 10;
+            transition: opacity 0.8s ease;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            margin-bottom: 20px;
+        }
+
+        input {
+            padding: 12px;
+            border: 2px solid var(--gold);
+            background: transparent;
+            color: white;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1rem;
+            outline: none;
+            width: 200px;
+        }
+
+        button {
+            margin-top: 15px;
+            padding: 10px 25px;
+            background: var(--gold);
+            color: var(--emerald);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        /* Card Display Wrapper */
+        #card-wrapper {
+            display: none;
+            perspective: 1500px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* 3D Inner Container */
+        .card-inner {
+            position: relative;
+            width: 90vw;
+            max-width: 450px;
+            min-width: 320px;
+            height: 85vh;
+            min-height: 500px;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            cursor: pointer;
+            animation: unfold 1s ease-out;
+        }
+
+        .card-inner.is-flipped {
+            transform: rotateY(180deg);
+        }
+
+        /* Front and Back Faces */
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            box-sizing: border-box;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        /* Front Face (Cover) */
+        .card-front {
+            background-color: var(--emerald);
+            border: 4px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--gold);
+            text-align: center;
+        }
+
+        .card-front h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.2rem;
+            margin: 0 0 15px 0;
+            padding: 0 20px;
+        }
+
+        .card-front p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            animation: pulseText 2s infinite;
+        }
+
+        @keyframes pulseText {
+
+            0%,
+            100% {
+                opacity: 0.6;
+                transform: scale(0.95);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        /* Back Face (Wish Content) */
+        .card-back {
+            background-color: var(--cream);
+            background-image: url('E-mubs/Card.png');
+            background-repeat: no-repeat;
+            background-position: center left;
+            /* Better for mobile */
+            background-size: cover;
+            transform: rotateY(180deg);
+        }
+
+        /* Download Button */
+        #downloadBtn {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            background: var(--gold);
+            color: var(--emerald);
+            border: none;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            white-space: nowrap;
+        }
+
+        .card-inner.is-flipped~#downloadBtn {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        #downloadBtn:hover {
+            transform: translateX(-50%) scale(1.05);
+            background: #e6c558;
+        }
+
+        @keyframes unfold {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Wish Content Overlay */
+        .wish-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            /* Adjusted for better padding */
+            text-align: center;
+            color: var(--text-dark);
+            background: rgba(249, 245, 232, 0.85);
+            /* Made slightly less transparent so it's readable if image drops */
+            padding: 25px;
+            border-radius: 10px;
+            backdrop-filter: blur(5px);
+            border: 1px solid var(--gold);
+            box-sizing: border-box;
+        }
+
+        .wish-content h2 {
+            font-family: 'Cinzel', serif;
+            color: var(--emerald);
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 1.5rem;
+        }
+
+        .wish-content p {
+            line-height: 1.6;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* Sparkle Animation */
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--gold);
+            border-radius: 50%;
+            animation: fly 3s infinite linear;
+            z-index: 5;
+            box-shadow: 0 0 5px var(--gold);
+        }
+
+        .falling-icon {
+            position: absolute;
+            animation: fly 3s infinite linear;
+            z-index: 5;
+            user-select: none;
+        }
+
+        @keyframes fly {
+            0% {
+                transform: translateY(0) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(-100vh) scale(0) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-height: 700px) {
+            .card-inner {
+                height: 90vh;
+            }
+
+            .wish-content {
+                padding: 15px;
+            }
+
+            .wish-content p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="login-screen">
+        <h1>Eid Mubarak</h1>
+        <p>Enter your secret hex code:</p>
+        <input type="text" id="hexInput" placeholder="#000000">
+        <br>
+        <button onclick="revealWish()">Open Wish</button>
+    </div>
+
+    <div id="card-wrapper">
+        <div class="card-inner" id="cardContainer" onclick="toggleCard()">
+            <!-- Front Cover -->
+            <div class="card-front">
+                <h2 id="coverName">For Someone</h2>
+                <p>Tap to Open</p>
+            </div>
+
+            <!-- Inside Wish -->
+            <div class="card-back" id="captureArea">
+                <div class="wish-content">
+                    <h2 id="recipientName"></h2>
+                    <p id="wishText"></p>
+                </div>
+            </div>
+        </div>
+        <button id="downloadBtn" onclick="downloadCard(event)">Download Card</button>
+    </div>
+
+    <script>
+        const database = {
+            "#F8B3A1": { name: "Shefa", wish: "Eid Mubarak, bestie!<br><br>I hope married life is treating you well, and I hope all the goodness you have radiated return as blessings in your life. Have fun!<br><br>- Jawaad" },
+            "#C4D7E2": { name: "Nuha", wish: "Fingers crossed for a lifetime full of Eids, hangouts and merriment together. Manifesting Genjam Goli basha x bidesh trip. Thanks for adopting me in the bondhu group and making my life a lot better. Don't forget me after your Gaibandha MTO stint.<br><br>Eid Mubarak!<br><br>- Jawaad" },
+            "#A9F0D2": { name: "Mashayekh", wish: "Eid Mubarak, Shawarma al Schweinsteiger!<br><br>I like how there's an unmatchable frequency where our brainrot humor vibes almost like soulmates. Looking forward to a lifetime full of neurodivergence, silly and fun conversations!<br><br>- Jawaad" },
+            "#E6C8A1": { name: "Banna", wish: "Eid Mubarak! I hope you keep moving mountains (for now: CFA) and maintain your pursuit of having good times that make life worthwhile. May our Binna Mansion memories never end. (AND let's play table tennis thx)<br><br>- Jawaad" },
+            "#B29DD9": { name: "Bannih", wish: "Some chapters will be a hard read, and the following ones will carry the effects. Doesn't mean the following chapters won't be net positives. Especially with your (read: our) silly goof in action.<br><br>Eid Mubarak! I hope every Eid brings us closer and makes us more grateful for what we have.<br><br>- Jawaad" },
+            "#77DD77": { name: "Tasnia", wish: "Not everything happens for a reason. It's a good thing because it frees us from the obligation to be happy for absolutely no reason as well.<br><br>May this Eid be your excuse to be happy for a day, just because you can. May we get to share another classroom, once again. Eid Mubarak!<br><br>- Jawaad" },
+            "#FFB347": { name: "Faiyaz", wish: "There may not be light at the end of the tunnel, but we definitely get better at navigating darkness while we're at it.<br><br>May your sillygoof become a shield for your daily trials and tribulations. I love to have you around for this exact reason, btw. Eid Mubarak!<br><br>- Jawaad" },
+            "#CB99C9": { name: "Prova", wish: "Eid Mubarak! Be extra happy this time because you have grown (not vertically) and reached places you've dreamed of. I am immensely proud of you.<br><br>- Jawaad" },
+            "#FF6961": { name: "Sabitul", wish: "Eid Mubarak! I miss having you in the campus. May you be looked after by Allah the way you've looked out for some of us. Hoping your new journey is treating you well!<br><br>- Jawaad" },
+            "#AEC6CF": { name: "Deepi", wish: "If we are so good at overthinking bad things, we should be equally good at overthinking good things too. May this be your excuse to power through and have an amazing Eid!<br><br>Thanks for looking out for me. Eid Mubarak!<br><br>- Jawaad" },
+            "#FDFD96": { name: "Aysha", wish: "Thanks for the Eid card two years ago. I still have it, and I pray you remain the same enthusiastically nice, kind and energetic person for the rest of your life. May this Ramadan come as a blessing to your life.<br><br>Eid Mubarak!<br><br>- Jawaad" },
+            "#C23B22": { name: "Rafin", wish: "I hope probash jibon is treating you just as nicely as you have treated us for so long. I admire your ability to pursue your passion with such ferocity.<br><br>A very happy Eid Mubarak. You deserve the best!<br><br>- Jawaad" },
+            "#836953": { name: "Bonoshree", wish: "You look more exuberant than before (95% confidence interval) and I hope it's just the start. Always glad to see a friend thrive.<br><br>Thanks for being my day 1 OG broski in IBA. Wishing you the happiest Eid Mubarak!<br><br>- Jawaad" },
+            "#779ECB": { name: "Shudipto", wish: "Please don't grind any further. Spend some more time with us in the 8th sem. Not like it will give me my OG-est teammate back :( miss having these absolutely electric (miserable) work sessions.<br><br>Eid Mubarak! We should go on more double dates ;)<br><br>- Jawaad" },
+            "#03C03C": { name: "Mentaj", wish: "If you keep asking for something strongly enough, it finds your way to you. For example your full-time :-<br><br>Anyway, Eid Mubarak! I hope you realize life doesn't stop and neither do you, no matter the extent of adversity. A pretty cool thing to realize, so never stop having fun.<br><br>- Jawaad" },
+            "#966FD6": { name: "Neeha", wish: "Eid Mubarak! May you keep thriving in both work and content creation space (and invite us for more free food/amenities raah) — we should go on a trip while all that happens. Take care, stay in touch and have a blast in the rest of your uni life!<br><br>- Jawaad" },
+            "#CFCFC4": { name: "Muntaha", wish: "Omg. The absolute love of my life. It's impossible to write how fortunate I am to have you around (I HATE THAT IT'S MOSTLY VIRTUAL) in my life. Eid feels a little less boring because of your radiant energy, and I hope you maintain it no matter how difficult life gets.<br><br>Thanks for being my lifeline. You deserve the absolute best. May Ramadan keep returning in our lives and may we get to witness a lifetime full of Eids together. Eid Mubarak!!! Please send gorg Eid pics :)<br><br>- Jawaad" },
+            "#F49AC2": { name: "Orna", wish: "Eid Mubarak! I'm glad that I have one of my oldest IBA friends back in some capacity. I am a big fan of your growth and I hope you only keep going upwards and onwards. Don't forget to have fun along the way!<br><br>- Jawaad" }
+        };
+
+        function revealWish() {
+            const code = document.getElementById('hexInput').value.trim().toUpperCase();
+            const data = database[code];
+
+            if (data) {
+                document.getElementById('login-screen').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('login-screen').style.display = 'none';
+                    // Using flex to ensure it respects the min-width/height properly
+                    document.getElementById('card-wrapper').style.display = 'block';
+                    document.getElementById('coverName').innerText = "For " + data.name;
+                    document.getElementById('recipientName').innerText = data.name;
+                    document.getElementById('wishText').innerHTML = data.wish;
+                    createSparkles();
+                }, 800);
+            } else {
+                alert("Invalid code! Please check your hex code again.");
+            }
+        }
+
+        function toggleCard() {
+            const card = document.getElementById('cardContainer');
+            if (!card.classList.contains('is-flipped')) {
+                card.classList.add('is-flipped');
+            }
+        }
+
+        function downloadCard(e) {
+            e.stopPropagation();
+            const btn = document.getElementById('downloadBtn');
+            const originalText = btn.innerText;
+
+            btn.innerText = "Downloading...";
+            btn.disabled = true;
+
+            const cardBack = document.getElementById('captureArea');
+            // html2canvas severely struggles with 3D CSS rotated elements.
+            // Create a clean clone without transforms to snap the picture properly.
+            const clone = cardBack.cloneNode(true);
+            clone.style.position = 'absolute';
+            clone.style.top = '-9999px';
+            clone.style.left = '-9999px';
+            clone.style.width = cardBack.offsetWidth + 'px';
+            clone.style.height = cardBack.offsetHeight + 'px';
+            clone.style.transform = 'none'; // Strip 3D effect
+            clone.style.zIndex = '-1000';
+
+            document.body.appendChild(clone);
+
+            setTimeout(() => { // small delay for clone DOM to settle
+                html2canvas(clone, {
+                    scale: 2,
+                    backgroundColor: null,
+                    useCORS: true
+                }).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = document.getElementById('recipientName').innerText + '_EidCard.png';
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+
+                    document.body.removeChild(clone);
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }).catch(err => {
+                    console.error("Error capturing card:", err);
+                    document.body.removeChild(clone);
+
+                    // Most common error locally is Chrome blocking file:// canvas requests
+                    alert("Download failed. If you opened this file by double-clicking it (file:// locally), your browser blocks downloading local images inside the canvas. Please run this via a local server (like Live Server in VS Code) for the download to work!");
+
+                    btn.innerText = "Error!";
+                    setTimeout(() => {
+                        btn.innerText = originalText;
+                        btn.disabled = false;
+                    }, 3000);
+                });
+            }, 50);
+        }
+
+        function createSparkles() {
+            const icons = ['✨', '🌙', '⭐', '🎊', '🎉', '🏮'];
+            for (let i = 0; i < 40; i++) {
+                let element = document.createElement('div');
+
+                if (Math.random() < 0.4) {
+                    element.className = 'sparkle';
+                } else {
+                    element.className = 'falling-icon';
+                    element.innerText = icons[Math.floor(Math.random() * icons.length)];
+                    element.style.fontSize = (Math.random() * 1.5 + 0.8) + 'rem';
+                }
+
+                element.style.left = Math.random() * 100 + 'vw';
+                element.style.top = '100vh';
+                element.style.animationDelay = Math.random() * 3 + 's';
+                element.style.animationDuration = (Math.random() * 2.5 + 3) + 's';
+                document.body.appendChild(element);
+            }
+        }
+    </script>
+</body>
+
+</html>
